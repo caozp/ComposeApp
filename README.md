@@ -73,3 +73,23 @@ TODO
 ## 依赖注入
 TODO
 
+### 固有特性测量
+固有特性测量IntrinsicSize 是解决 父容器尺寸由内容决定，但子项又需要撑满父容器 这类问题
+
+Compose测量流程
+父容器给约束，子项测量自己。子项报告尺寸，父容器决定自己的尺寸
+
+IntrinsicSize会带来两遍测量的性能
+父容器先问每个子项的固有尺寸，父容器根据固有尺寸确定自己的尺寸。再以这个确定的尺寸作为约束，重新测量子项
+
+Row高度由最高子项决定,子项撑满
+Row(Modifier.height(IntrinsicSize.Min)) + Modifier.fillMaxHeight()
+
+Column宽度由最高子项决定，其他子项撑满时用
+
+Column(Modifier.width(IntrinsicSize.Max)) + Modifier.fillMaxWidth()
+
+注意点:  
+不是所有组件都支持固有测量，比如Canvas和位置定尺寸的Image。
+
+两遍测量有性能成本
