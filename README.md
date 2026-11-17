@@ -71,7 +71,94 @@ SnapShotFlow。将state转化成StateFlow
 TODO
 
 ## 依赖注入
-TODO
+IOC控制反转 借助 第三方 实现 具有依赖关系的对象之间的解耦。 也叫依赖注入
+
+### Dagger
+
+1. 最简单的例子Car依赖Engine。
+需要使用Inject注解添加到Engine的构造方法
+
+```
+class Engine {
+    @Inject
+    public Engine() 
+}
+```
+然后需要创建一个用Component标注的接口CarComponent。实际上是注入器
+```
+@Component
+public interface CarComponent {
+   void inject(Car car)
+}
+```
+最后在Car类中完成注入动作
+```
+class Car {
+    @Inject
+    Engine engine
+    
+    public Car() {
+       DaggerCarComponent.builder().build().inject(this)
+    }
+}
+```
+
+2. 模块注入方式，使用Module类和Provide来
+```
+@Module
+public class NetModule{
+
+    @Provides
+    public Retrofit provideRetrofit() {
+         return new Retrofit.Builder().baseUrl().build()
+    }
+    
+    //该Module已经知道怎么获取Retrofit的实例，所以可以以参数的形式传进来
+    @Provides
+    public ApiService provideApiService(Retrofit retrofit) {
+         return retrofit.create(ApiService.class)
+    }
+}
+```
+在注入器中 指定module的class
+```agsl
+@Component(modules=NetModule.class)
+public interface AppComponent {
+   void inject(MainActivity activity)
+}
+```
+
+
+作用域 可以将某个对象的生命周期限定为组件的生命周期。也就是在作用域范围内，使用到的是同一实例
+Singleton是默认的作用域注解。 某个对象的生命周期指定了Singleton，那么它的注入器也要指定对应的Singleton
+
+使用Scope可以自定义作用域
+
+组件依赖 , 使用dependencies或者subComponent
+```
+@UserScope
+@Component(modules=UserModule.class,dependencies = AppComponent.class)
+public interface UserComponent {
+
+}
+
+```
+
+### Hilt
+安装指南https://dagger.dev/hilt/gradle-setup.html 
+
+添加对Compose的支持
+```
+implementation("androidx.hilt:hilt-navigation-compose:1.4.0")
+```
+
+|hilt组件|注入对象|作用域|
+|:--:|:--:|:--:|
+|SingletonComponent|全局单例|Singleton|
+|AcvitityRetainedComponent|ViewModel|AcvitityRetainedScope|
+|AcvitityComponent|Activity|AcvitityScope|
+
+
 
 ### 固有特性测量
 固有特性测量IntrinsicSize 是解决 父容器尺寸由内容决定，但子项又需要撑满父容器 这类问题
