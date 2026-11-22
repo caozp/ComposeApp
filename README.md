@@ -159,6 +159,19 @@ implementation("androidx.hilt:hilt-navigation-compose:1.4.0")
 |AcvitityComponent|Activity|AcvitityScope|
 
 
+当依赖的构造函数中包含运行时才确定的参数，此时使用AssistedInject+Assisted+AssistedFactory,Hilt会自动生成一个工厂实现
+```agsl
+@HiltViewModel(assistedFactory=MyViewModel.Factory::class)
+class MyViewModel @AssistedInject constructor(
+     @Assisted private val userId: String
+):ViewModel() {
+
+     @AssistedFactory
+     interface Factory {
+         fun create(userId:String):MyViewModel
+     }
+}
+```
 
 ### 固有特性测量
 固有特性测量IntrinsicSize 是解决 父容器尺寸由内容决定，但子项又需要撑满父容器 这类问题
