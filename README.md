@@ -19,6 +19,7 @@ DataStore替代sp，来存储信息。示例写的是存储深色，浅色模式
 Room TODO
 
 ## 导航
+https://android-docs.cn/guide/navigation/principles
 实现登陆页，注册页，主页的跳转
 
 
@@ -71,6 +72,7 @@ SnapShotFlow。将state转化成StateFlow
 TODO
 
 ## 依赖注入
+https://android-docs.cn/training/dependency-injection
 IOC控制反转 借助 第三方 实现 具有依赖关系的对象之间的解耦。 也叫依赖注入
 
 ### Dagger
